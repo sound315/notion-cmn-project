@@ -1,0 +1,13 @@
+# 텍스트 파일 줄바꿈 통일 (LF 기준)
+* text=auto eol=lf
+
+# 쉘 스크립트는 반드시 LF
+*.sh text eol=lf
+
+# Windows PowerShell 스크립트는 CRLF
+*.ps1 text eol=crlf
+
+# 바이너리
+*.png binary
+*.jpg binary
+*.ico binary

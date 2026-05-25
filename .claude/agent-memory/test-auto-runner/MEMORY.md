@@ -1,0 +1,1 @@
+- [프로젝트 테스트 환경 설정](project_test_setup.md) — pytest + pytest-asyncio, 실행 명령어, 패치 패턴, Redis Mock 방식 등 핵심 테스트 관례
