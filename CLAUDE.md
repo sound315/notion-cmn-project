@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Context
+
+- PRD 문서: @docs/PRD.md
+- 개발 로드맵: @docs/ROADMAP.md
+
 ## 프로젝트 개요
 
 LLM Chatbot Starter Kit — FastAPI 백엔드 + Streamlit UI + 임베딩 위젯으로 구성된 멀티 LLM 프로바이더 채팅 스타터킷.
@@ -87,3 +92,65 @@ REDIS_URL=redis://localhost:6379
 ## 테스트
 
 `pytest.ini` 기준 `tests/` 디렉토리. `asyncio_mode = auto` 설정으로 `async` 테스트 함수 자동 지원. 테스트는 실제 LLM/Redis 연결 없이 mock 기반으로 작성되어 있음.
+
+---
+
+## blog/ 서브프로젝트 (Next.js Notion CMS 블로그)
+
+`blog/` 디렉토리는 별개의 Next.js 15 프로젝트다. Python FastAPI 스타터킷과 독립적으로 동작한다.
+
+### 기술 스택
+
+- Next.js 15 (App Router), TypeScript, Tailwind CSS v4
+- shadcn/ui, Lucide React
+- `@notionhq/client` — Notion API 연동
+- 배포: Vercel
+
+### 명령어
+
+```powershell
+# blog 디렉토리에서 실행
+cd blog
+
+# 의존성 설치
+npm install
+
+# 개발 서버 실행
+npm run dev
+
+# 빌드
+npm run build
+
+# 린트
+npm run lint
+```
+
+### 환경 변수
+
+`blog/.env.local.example` 복사 후 `blog/.env.local` 작성:
+
+```env
+NOTION_API_KEY=your_notion_integration_secret
+NOTION_DATABASE_ID=your_database_id
+```
+
+### 아키텍처
+
+```
+app/page.tsx              # 홈 (글 목록)
+app/posts/[slug]/         # 글 상세
+app/category/[name]/      # 카테고리 필터
+components/               # UI 컴포넌트 (PostCard, Header, Footer, Badge)
+lib/notion.ts             # Notion API 클라이언트
+types/post.ts             # 타입 정의
+```
+
+### Notion 데이터베이스 필드
+
+| 필드명 | 타입 | 설명 |
+|--------|------|------|
+| Title | title | 글 제목 |
+| Category | select | 카테고리 |
+| Tags | multi_select | 태그 목록 |
+| Published | date | 발행일 |
+| Status | select | `초안` / `발행됨` |
