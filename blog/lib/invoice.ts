@@ -145,3 +145,97 @@ export async function getInvoiceDetail(id: string): Promise<InvoiceDetail | null
   if (!invoice) return null;
   return { ...invoice, items };
 }
+
+export interface CreateInvoiceInput {
+  invoiceNumber: string;
+  clientName: string;
+  issuedAt: string;
+  expiresAt: string;
+  status: InvoiceStatus;
+}
+
+/**
+ * 견적서 생성
+ */
+export async function createInvoice(input: CreateInvoiceInput): Promise<Invoice> {
+  const page = await notion.pages.create({
+    parent: { database_id: INVOICES_DATABASE_ID },
+    properties: {
+      '견적서 번호': { title: [{ text: { content: input.invoiceNumber } }] },
+      '클라이언트명': { rich_text: [{ text: { content: input.clientName } }] },
+      '발행일': { date: { start: input.issuedAt } },
+      '유효기간': { date: { start: input.expiresAt } },
+      '상태': { select: { name: input.status } },
+    },
+  });
+
+  if (!isFullPage(page)) throw new Error('견적서 생성 실패');
+  return pageToInvoice(page);
+}
+
+export interface UpdateInvoiceInput {
+  clientName?: string;
+  issuedAt?: string;
+  expiresAt?: string;
+  status?: InvoiceStatus;
+}
+
+/**
+ * 견적서 수정
+ */
+export async function updateInvoice(id: string, input: UpdateInvoiceInput): Promise<Invoice> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const properties: Record<string, any> = {};
+
+  if (input.clientName !== undefined)
+    properties['클라이언트명'] = { rich_text: [{ text: { content: input.clientName } }] };
+  if (input.issuedAt !== undefined)
+    properties['발행일'] = { date: { start: input.issuedAt } };
+  if (input.expiresAt !== undefined)
+    properties['유효기간'] = { date: { start: input.expiresAt } };
+  if (input.status !== undefined)
+    properties['상태'] = { select: { name: input.status } };
+
+  const page = await notion.pages.update({ page_id: id, properties });
+  if (!isFullPage(page)) throw new Error('견적서 수정 실패');
+  return pageToInvoice(page);
+}
+
+/**
+ * 견적서 삭제 (아카이브)
+ */
+export async function deleteInvoice(id: string): Promise<void> {
+  await notion.pages.update({ page_id: id, archived: true });
+}
+
+export interface CreateItemInput {
+  invoiceId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+/**
+ * 견적서 항목 추가
+ */
+export async function createItem(input: CreateItemInput): Promise<InvoiceItem> {
+  const page = await notion.pages.create({
+    parent: { database_id: ITEMS_DATABASE_ID },
+    properties: {
+      '항목명': { title: [{ text: { content: input.name } }] },
+      '수량': { number: input.quantity },
+      '단가': { number: input.unitPrice },
+      'Invoices': { relation: [{ id: input.invoiceId }] },
+    },
+  });
+
+  if (!isFullPage(page)) throw new Error('항목 추가 실패');
+  return pageToItem(page);
+}
+
+/**
+ * 견적서 항목 삭제 (아카이브)
+ */
+export async function deleteItem(itemId: string): Promise<void> {
+  await notion.pages.update({ page_id: itemId, archived: true });
+}

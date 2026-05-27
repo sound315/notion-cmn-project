@@ -199,6 +199,45 @@
 
 ---
 
+## Phase 7 — 관리자 기능 (Admin)
+
+**배경**: 관리자 인증 및 Notion API를 통한 견적서 CRUD 기능을 추가한다.
+
+**예상 소요 시간**: 4~6시간
+
+### 작업 목록
+
+#### 관리자 인증
+- [ ] `/admin/login` 페이지 — 이메일/패스워드 또는 패스키 로그인
+- [ ] 세션 관리 — Next.js middleware로 `/admin/*` 경로 보호
+- [ ] 로그아웃 기능
+
+#### 견적서 CRUD
+- [ ] 견적서 생성 (`POST`) — Notion API로 새 페이지 생성
+- [ ] 견적서 수정 (`PATCH`) — 상태, 유효기간 등 필드 업데이트
+- [ ] 견적서 삭제 (`DELETE`) — Notion 페이지 아카이브
+- [ ] 견적서 항목(Items) 추가/삭제
+
+#### API 라우트 (`app/api/admin/`)
+- [ ] `POST /api/admin/invoices` — 견적서 생성
+- [ ] `PATCH /api/admin/invoices/[id]` — 견적서 수정
+- [ ] `DELETE /api/admin/invoices/[id]` — 견적서 삭제
+- [ ] `POST /api/admin/invoices/[id]/items` — 항목 추가
+- [ ] `DELETE /api/admin/invoices/[id]/items/[itemId]` — 항목 삭제
+
+#### 관리자 UI (`app/admin/`)
+- [ ] `/admin` — 관리자 대시보드 (견적서 목록 + 액션 버튼)
+- [ ] `/admin/invoices/new` — 견적서 생성 폼
+- [ ] `/admin/invoices/[id]/edit` — 견적서 수정 폼
+
+### 완료 기준
+
+- 로그인하지 않은 사용자는 `/admin/*` 접근 시 로그인 페이지로 리다이렉트된다
+- 관리자가 견적서를 생성하면 Notion DB에 즉시 반영된다
+- 견적서 상태(대기/승인/거절/완료) 변경이 가능하다
+
+---
+
 ## 전체 일정 요약 (업데이트)
 
 | Phase | 내용 | 예상 시간 | 상태 |
@@ -209,6 +248,7 @@
 | 4 | 추가 기능 개발 | 3~4h | 진행 중 |
 | 5 | 최적화 및 배포 | 2~3h | 대기 |
 | 6 | 견적서 관리 기능 | 2~3h | 완료 |
+| 7 | 관리자 기능 | 4~6h | 대기 |
 
 ---
 
