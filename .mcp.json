@@ -3,6 +3,15 @@
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
+    },
+    "shrimp-task-manager": {
+      "command": "node",
+      "args": ["D:/Dev/claude/mcp-shrimp-task-manager/dist/index.js"],
+      "env": {
+        "DATA_DIR": "D:/Dev/claude/notion-cms-project/shrimp_data",
+        "TEMPLATES_USE": "en",
+        "ENABLE_GUI": "true"
+      }
     }
   }
 }
