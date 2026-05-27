@@ -46,7 +46,6 @@ export default function InvoiceForm({ invoice }: Props) {
 
     if (res.ok) {
       router.push('/admin');
-      router.refresh();
     } else {
       const data = await res.json();
       setError(data.error ?? '저장 중 오류가 발생했습니다.');

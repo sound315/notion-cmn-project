@@ -10,13 +10,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: '필수 항목이 누락되었습니다.' }, { status: 400 });
   }
 
-  const invoice = await createInvoice({
-    invoiceNumber,
-    clientName,
-    issuedAt,
-    expiresAt,
-    status: (status ?? '대기') as InvoiceStatus,
-  });
-
-  return NextResponse.json(invoice, { status: 201 });
+  try {
+    const invoice = await createInvoice({
+      invoiceNumber,
+      clientName,
+      issuedAt,
+      expiresAt,
+      status: (status ?? '대기') as InvoiceStatus,
+    });
+    return NextResponse.json(invoice, { status: 201 });
+  } catch (error) {
+    console.error('견적서 생성 오류:', error);
+    return NextResponse.json({ error: '견적서 생성 중 오류가 발생했습니다.' }, { status: 500 });
+  }
 }

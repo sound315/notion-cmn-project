@@ -22,7 +22,7 @@ function pageToInvoice(page: PageObjectResponse): Invoice {
   const issuedAt = props['발행일']?.date?.start ?? '';
   const expiresAt = props['유효기간']?.date?.start ?? '';
 
-  const status = (props['상태']?.select?.name ?? '대기') as InvoiceStatus;
+  const status = (props['status']?.select?.name ?? props['상태']?.select?.name ?? '대기') as InvoiceStatus;
 
   const totalAmount = props['총 금액']?.number ?? 0;
 
@@ -165,7 +165,7 @@ export async function createInvoice(input: CreateInvoiceInput): Promise<Invoice>
       '클라이언트명': { rich_text: [{ text: { content: input.clientName } }] },
       '발행일': { date: { start: input.issuedAt } },
       '유효기간': { date: { start: input.expiresAt } },
-      '상태': { select: { name: input.status } },
+      'status': { select: { name: input.status } },
     },
   });
 
@@ -194,7 +194,7 @@ export async function updateInvoice(id: string, input: UpdateInvoiceInput): Prom
   if (input.expiresAt !== undefined)
     properties['유효기간'] = { date: { start: input.expiresAt } };
   if (input.status !== undefined)
-    properties['상태'] = { select: { name: input.status } };
+    properties['status'] = { select: { name: input.status } };
 
   const page = await notion.pages.update({ page_id: id, properties });
   if (!isFullPage(page)) throw new Error('견적서 수정 실패');
