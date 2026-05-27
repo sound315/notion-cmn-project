@@ -17,9 +17,9 @@
 - [x] shadcn/ui 초기 설정
 - [x] `.env.local.example` 작성 (`NOTION_API_KEY`, `NOTION_DATABASE_ID`)
 - [x] 디렉토리 구조 확립 (`app/`, `components/`, `lib/`, `types/`)
-- [ ] Notion Integration 생성 및 API 키 발급
-- [ ] Notion 데이터베이스 생성 (Title, Category, Tags, Published, Status 필드)
-- [ ] `.env.local` 작성 및 Notion 연결 확인
+- [x] Notion Integration 생성 및 API 키 발급
+- [x] Notion 데이터베이스 생성 (Title, Category, Tags, Published, Status 필드)
+- [x] `.env.local` 작성 및 Notion 연결 확인
 
 ### 완료 기준
 
@@ -73,24 +73,24 @@
 ### 작업 목록
 
 #### 홈 페이지 (`app/page.tsx`)
-- [ ] `getPublishedPosts()` 호출하여 글 목록 렌더링
-- [ ] `PostCard` 컴포넌트 그리드 레이아웃
-- [ ] 발행된 글 없을 때 빈 상태(empty state) 처리
-- [ ] ISR 설정 (`revalidate = 60`)
+- [x] `getPublishedPosts()` 호출하여 글 목록 렌더링
+- [x] `PostCard` 컴포넌트 그리드 레이아웃
+- [x] 발행된 글 없을 때 빈 상태(empty state) 처리
+- [x] ISR 설정 (`revalidate = 60`)
 
 #### 글 상세 페이지 (`app/posts/[slug]/page.tsx`)
-- [ ] `getPostBySlug()`로 포스트 메타 조회
-- [ ] `getPostBlocks()`로 Notion 블록 콘텐츠 렌더링
-- [ ] 제목, 발행일, 카테고리, 태그 메타 정보 표시
-- [ ] 이전/다음 글 네비게이션
-- [ ] 존재하지 않는 slug 접근 시 404 처리
-- [ ] `generateStaticParams()`로 정적 생성
+- [x] `getPostBySlug()`로 포스트 메타 조회
+- [x] `getPostBlocks()`로 Notion 블록 콘텐츠 렌더링
+- [x] 제목, 발행일, 카테고리, 태그 메타 정보 표시
+- [x] 이전/다음 글 네비게이션
+- [x] 존재하지 않는 slug 접근 시 404 처리
+- [x] `generateStaticParams()`로 정적 생성
 
 #### 카테고리 페이지 (`app/category/[name]/page.tsx`)
-- [ ] 카테고리별 글 목록 필터링
-- [ ] 전체 카테고리 사이드바 표시
-- [ ] 현재 카테고리 하이라이트
-- [ ] `generateStaticParams()`로 정적 생성
+- [x] 카테고리별 글 목록 필터링
+- [x] 전체 카테고리 사이드바 표시
+- [x] 현재 카테고리 하이라이트
+- [x] `generateStaticParams()`로 정적 생성
 
 #### 검색 기능
 - [ ] 클라이언트 사이드 검색 컴포넌트 (`components/SearchBar.tsx`)
@@ -115,7 +115,7 @@
 ### 작업 목록
 
 #### SEO
-- [ ] 각 페이지 `generateMetadata()` 구현
+- [x] 각 페이지 `generateMetadata()` 구현
 - [ ] Open Graph 태그 설정 (제목, 설명, 이미지)
 - [ ] `sitemap.xml` 자동 생성 (`app/sitemap.ts`)
 - [ ] `robots.txt` 설정
@@ -125,7 +125,7 @@
 - [ ] 코드 블록 신택스 하이라이팅 (`highlight.js` 또는 `shiki`)
 - [ ] 이미지 최적화 (`next/image` 적용)
 - [ ] 로딩 스켈레톤 UI (`app/loading.tsx`)
-- [ ] 에러 바운더리 (`app/error.tsx`)
+- [x] 에러 바운더리 (`app/error.tsx`)
 
 ### 완료 기준
 
@@ -150,8 +150,9 @@
 - [ ] Notion API 응답 캐싱 전략 검토
 
 #### 배포
-- [ ] Vercel 프로젝트 연결 (`blog/` 서브디렉토리 루트로 설정)
-- [ ] Vercel 환경 변수 설정 (`NOTION_API_KEY`, `NOTION_DATABASE_ID`)
+- [x] `vercel.json` 생성 (`blog/` 서브디렉토리 루트로 설정)
+- [x] `npm run build` 성공 확인
+- [ ] Vercel 환경 변수 설정 (`NOTION_API_KEY`, `NOTION_DATABASE_ID`, `NOTION_ITEMS_DATABASE_ID`)
 - [ ] 프로덕션 배포 및 동작 확인
 - [ ] 커스텀 도메인 연결 (선택)
 
@@ -163,16 +164,51 @@
 
 ---
 
-## 전체 일정 요약
+## Phase 6 — 견적서 관리 기능 (Invoices)
+
+**배경**: Notion Invoices/Items 데이터베이스를 연동하여 견적서 목록 및 상세 페이지를 추가했다.
+
+**예상 소요 시간**: 2~3시간
+
+### 작업 목록
+
+#### 타입 정의 (`types/invoice.ts`)
+- [x] `Invoice` 인터페이스 (견적서 번호, 클라이언트명, 발행일, 유효기간, 상태, 총 금액)
+- [x] `InvoiceItem` 인터페이스 (항목명, 수량, 단가, 금액)
+- [x] `InvoiceDetail` 인터페이스 (Invoice + items 조인)
+- [x] `InvoiceStatus` 유니온 타입 (`대기` | `승인` | `거절` | `완료`)
+
+#### Notion API 클라이언트 (`lib/invoice.ts`)
+- [x] `getInvoices()` — 전체 견적서 목록 조회 (발행일 최신순)
+- [x] `getInvoiceById(id)` — 견적서 단건 조회
+- [x] `getItemsByInvoiceId(invoiceId)` — 견적서 항목 목록 조회
+- [x] `getInvoiceDetail(id)` — 견적서 + 항목 조인 조회
+
+#### 페이지
+- [x] `app/invoices/page.tsx` — 견적서 목록 (`/invoices`)
+- [x] `app/invoices/[id]/page.tsx` — 견적서 상세 (`/invoices/:id`)
+
+#### 환경 변수
+- [x] `NOTION_ITEMS_DATABASE_ID` 추가 (Items DB)
+
+### 완료 기준
+
+- `/invoices`에서 Notion Invoices DB 데이터가 정상 출력된다 ✅
+- `/invoices/:id`에서 항목 목록과 총 금액이 정상 렌더링된다 ✅
+- `@notionhq/client` v5 호환 (`databases.query` → `search` API 대응) ✅
+
+---
+
+## 전체 일정 요약 (업데이트)
 
 | Phase | 내용 | 예상 시간 | 상태 |
 |-------|------|-----------|------|
-| 1 | 프로젝트 초기 설정 | 2~3h | 진행 중 |
-| 2 | 공통 모듈/컴포넌트 | 3~4h | 진행 중 |
-| 3 | 핵심 기능 개발 | 4~6h | 대기 |
-| 4 | 추가 기능 개발 | 3~4h | 대기 |
+| 1 | 프로젝트 초기 설정 | 2~3h | 완료 |
+| 2 | 공통 모듈/컴포넌트 | 3~4h | 완료 |
+| 3 | 핵심 기능 개발 | 4~6h | 진행 중 |
+| 4 | 추가 기능 개발 | 3~4h | 진행 중 |
 | 5 | 최적화 및 배포 | 2~3h | 대기 |
-| **합계** | | **14~20h** | |
+| 6 | 견적서 관리 기능 | 2~3h | 완료 |
 
 ---
 
