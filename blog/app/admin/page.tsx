@@ -31,6 +31,12 @@ export default async function AdminPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
+            href="/admin/contacts"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            문의 목록
+          </Link>
+          <Link
             href="/admin/invoices/new"
             className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 transition-colors"
           >

@@ -25,6 +25,11 @@ export default function Header() {
                 견적서
               </Link>
             </li>
+            <li>
+              <Link href="/contact" className="hover:text-gray-900 transition-colors">
+                문의
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
